@@ -3,6 +3,8 @@ from core import State
 
 class Board(tk.Frame):
 
+	playables = [State.n - 1 for rank in range(State.n)]
+
 	def colourToPlay():
 		if State.firstToPlay:
 			return('gold')
@@ -23,7 +25,11 @@ class Square(tk.Canvas):
 		self.colour = None
 		self.position = position
 		self.circle = self.create_oval(0, self.size, self.size, 0, fill='#fff')
-		
+
 	def fill(self, event):
-		self.itemconfig(self.circle, fill=Board.colourToPlay())
-		State.nextTurn()
+		if Board.playables[self.position[1]] == self.position[0]:
+			self.itemconfig(self.circle, fill=Board.colourToPlay())
+			State.playMove(self.position)
+			Board.playables[self.position[1]] -= 1
+		else:
+			print(self.position)
