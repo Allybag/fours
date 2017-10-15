@@ -17,7 +17,7 @@ class Square(tk.Canvas):
 
 	def __init__(self, position, master=None, size=None, colour='blue'):
 		super().__init__(master, width=size, height=size, bg=colour)
-		self.bind("<Button-1>", self.fill)
+		self.bind("<Button-1>", self.play)
 		self.config(highlightbackground="Black")
 		self.config(highlightthickness=1)
 
@@ -26,10 +26,12 @@ class Square(tk.Canvas):
 		self.position = position
 		self.circle = self.create_oval(0, self.size, self.size, 0, fill='#fff')
 
-	def fill(self, event):
-		if Board.playables[self.position[1]] == self.position[0]:
+	def play(self, event):
+		if not State.result and Board.playables[self.position[1]] == self.position[0]:
 			self.itemconfig(self.circle, fill=Board.colourToPlay())
 			State.playMove(self.position)
 			Board.playables[self.position[1]] -= 1
+			if State.findLongestLine(State.state, self.position) == 4:
+				State.result = 4
 		else:
 			print(self.position)
